@@ -154,36 +154,45 @@ if __name__ == "__main__":
   print('Final Image Saved as output.bmp!')
   print('Json output saved as output.json!')
 
-  nose=[i for i in range(0,13)]
-  upper_lip=[i for i in range(13,18)]
-  lower_lip=[i for i in range(18,29)]
-  upper_centeral_tooth=[i for i in range(40,44)]
-  lower_centeral_tooth=[55,56,45,57]
-  maxilla=[i for i in range(29,41)]
-  maxilla.extend([43,44])
-  symphasis=[i for i in range(45,56)]
-  mandible=[i for i in range(62,74)]
+  face=[i for i in range(0,18)]
+  chin=[i for i in range(18,29)]
+  palate=[i for i in range(29,41)]
+  palate.extend([43,44])
+  incisor_up=[41, 42]
+  mandible=[i for i in range(45,56)]
+  incisor_down=[56,57]
+  molar_down=[58,59]
+  molar_up=[60,61]
+  neck=[i for i in range(62,74)]
+  neck.extend([51])
+  free_point=[74,75,76,77]
   c4=[i for i in range(78,83)]
   c3=[i for i in range(83,88)]
   c2=[i for i in range(88,93)]
   c1=[i for i in range(93,102)]
-  other=[102,103]
-  lower_molar=[58,59]
-  upper_molar=[60,61]
-  anatomic_landmarks=[i for i in range(74,78)]
+    
 
-  cats=['nose','upper_lip','lower_lip','upper_centeral_tooth','lower_centeral_tooth',
-        'maxilla','symphasis','mandible','c4','c3','c2','c1','lower_molar','upper_molar','anatomic_landmarks','other']
+  cats=['face','chin','palate','incisor_up','mandible',
+        'incisor_down','molar_down','molar_up','neck','free_point','c4','c3','c2','c1']
 
   categories={}
   for ca in cats:
     for index in globals()['{}'.format(ca)]:
-      categories[index]=ca
+         categories[index]=ca
 
-  with open('../output.json','w') as f:
+  with open('../output2.json','w') as f:
     output={}
     output['image_path']=opt.source
     output['parts']=[]
+    for i in range(14):
+        if '_' in cats[i]:
+            modified_cat=cats[i].replace('_','-')
+        else:
+            modified_cat=cats[i]
+        output['parts'].append({'type':modified_cat,'points':[]})
+        
+        
     for key in pred_data:
-      output['parts'].append({'type':categories[key],'points':[{'x':int(pred_data[key][0]),'y':int(pred_data[key][1]),'label':assign[key] if key in assign else key}],'unclose':True})
+        output['parts'][cats.index(categories[key])]['points'].append({"x":int(pred_data[key][0]),
+                                                                       "y":int(pred_data[key][1])})
     json.dump(output,f)
