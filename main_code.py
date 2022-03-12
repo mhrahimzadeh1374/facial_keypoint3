@@ -184,7 +184,12 @@ if __name__ == "__main__":
 
 
     for key in pred_data:
-        output['parts'][cats.index(categories[key])]['points'].append({"x":int(pred_data[key][0]),
-                                                                       "y":int(pred_data[key][1])})
+        if key in assign:
+             output['parts'][cats.index(categories[key])]['points'].append({"x":int(pred_data[key][0]),
+                                                                       "y":int(pred_data[key][1]),"label":assign[key]})
+        else:
+             output['parts'][cats.index(categories[key])]['points'].append({"x":int(pred_data[key][0]),
+                                                                       "y":int(pred_data[key][1]),"label":str(key)})
+                
     json.dump(output,f)
     print('true')
