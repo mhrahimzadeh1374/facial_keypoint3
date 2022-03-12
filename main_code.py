@@ -189,7 +189,7 @@ if __name__ == "__main__":
                                                                        "y":int(pred_data[key][1]),"label":assign[key]})
         else:
              output['parts'][cats.index(categories[key])]['points'].append({"x":int(pred_data[key][0]),
-                                                                       "y":int(pred_data[key][1]),"label":str(key)})
+                                                                       "y":int(pred_data[key][1])})
                 
     json.dump(output,f)
     print('true')
