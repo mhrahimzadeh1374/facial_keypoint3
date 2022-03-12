@@ -9,7 +9,6 @@ import pandas as pd
 import csv
 import os
 import json
-from google.colab.patches import cv2_imshow
 import math
 import pandas as pd
 import scipy
@@ -42,7 +41,7 @@ def round_decimals_up(number:float, decimals:int=2):
 
     factor = 10 ** decimals
     return math.ceil(number * factor) / factor
-    
+
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source', type=str, default='../source.jpg', help='path to image')
@@ -51,7 +50,7 @@ def parse_opt():
 
 if __name__ == "__main__":
   opt = parse_opt()
-  org_img=cv2.imread(opt.source) 
+  org_img=cv2.imread(opt.source)
 
 
   shape=(32,32,1)
@@ -74,10 +73,6 @@ if __name__ == "__main__":
 
 
   cropped_img=org_img[y1:y2,x1:x2,:]
-  from google.colab.patches import cv2_imshow
-  print('Cropped image saved')
-  cv2_imshow(cropped_img)
-  cv2.imwrite('Cropped_image.jpg',cropped_img)
 
 
 
@@ -86,7 +81,7 @@ if __name__ == "__main__":
 
   w=cropped_img.shape[1]
   h=cropped_img.shape[0]
-  for pn in range(104):
+  for pn in range(102):
     keras.backend.clear_session()
     model=keras.models.load_model('models/skeleton_{}.hdf5'.format(pn))
     reg=thresh[str(pn)]
@@ -145,14 +140,9 @@ if __name__ == "__main__":
           except:
             pass
     if int(key) in assign:
-        img=cv2.putText(painted_img, '{}({})'.format(key,assign[int(key)]), (xx+1,yy+1), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0,0,255), 1, cv2.LINE_AA) 
+        img=cv2.putText(painted_img, '{}({})'.format(key,assign[int(key)]), (xx+1,yy+1), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0,0,255), 1, cv2.LINE_AA)
     else:
-        img=cv2.putText(painted_img, '{}'.format(key), (xx+1,yy+1), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0,0,255), 1, cv2.LINE_AA) 
-
-  cv2_imshow(img)
-  cv2.imwrite('../output.bmp',img)
-  print('Final Image Saved as output.bmp!')
-  print('Json output saved as output.json!')
+        img=cv2.putText(painted_img, '{}'.format(key), (xx+1,yy+1), cv2.FONT_HERSHEY_SIMPLEX , 0.5, (0,0,255), 1, cv2.LINE_AA)
 
   face=[i for i in range(0,18)]
   chin=[i for i in range(18,29)]
@@ -170,7 +160,7 @@ if __name__ == "__main__":
   c3=[i for i in range(83,88)]
   c2=[i for i in range(88,93)]
   c1=[i for i in range(93,102)]
-    
+
 
   cats=['face','chin','palate','incisor_up','mandible',
         'incisor_down','molar_down','molar_up','neck','free_point','c4','c3','c2','c1']
@@ -180,7 +170,7 @@ if __name__ == "__main__":
     for index in globals()['{}'.format(ca)]:
          categories[index]=ca
 
-  with open('../output2.json','w') as f:
+  with open('output.json','w') as f:
     output={}
     output['image_path']=opt.source
     output['parts']=[]
@@ -190,9 +180,10 @@ if __name__ == "__main__":
         else:
             modified_cat=cats[i]
         output['parts'].append({'type':modified_cat,'points':[]})
-        
-        
+
+
     for key in pred_data:
         output['parts'][cats.index(categories[key])]['points'].append({"x":int(pred_data[key][0]),
                                                                        "y":int(pred_data[key][1])})
     json.dump(output,f)
+    print('true')
