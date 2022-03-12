@@ -180,7 +180,10 @@ if __name__ == "__main__":
             modified_cat=cats[i].replace('_','-')
         else:
             modified_cat=cats[i]
-        output['parts'].append({'type':modified_cat,'points':[]})
+        if i==9:
+            output['parts'].append({'type':modified_cat,'points':[],'unclose':True})
+        else:
+            output['parts'].append({'type':modified_cat,'points':[]})
 
 
     for key in pred_data:
