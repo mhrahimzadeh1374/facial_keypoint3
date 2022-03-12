@@ -73,6 +73,7 @@ if __name__ == "__main__":
 
 
   cropped_img=org_img[y1:y2,x1:x2,:]
+  cv2.imwrite("cropped_img.jpg",cropped_img)
 
 
 
@@ -172,7 +173,7 @@ if __name__ == "__main__":
 
   with open('output.json','w') as f:
     output={}
-    output['image_path']=opt.source
+    output['image_path']="cropped_img.jpg"
     output['parts']=[]
     for i in range(14):
         if '_' in cats[i]:
